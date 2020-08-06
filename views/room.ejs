@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="A free video chatting website" />
+    <meta name="robots" content="index,follow" />
+    <link rel="icon" href="/img/video-call.svg" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pattaya&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cookie&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      const ROOM_ID = "<%= roomId %>";
+    </script>
+    <script
+      src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"
+      defer
+    ></script>
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="/js/script.js" defer></script>
+    <title>Speak</title>
+  </head>
+  <section class="hero">
+    <div class="hero-left">
+      <div id="logo">
+        <h2>Speak</h2>
+      </div>
+      <div class="hero-left-svg">
+        <img src="/img/undraw_video_call_kxyp.svg" alt="video call svg image" />
+      </div>
+      <div class="hero-left-text">
+        <h2>
+          Enjoy Free Video Chat
+        </h2>
+        <h6>Let's Speak</h6>
+        <h4>It's <span>Free!</span> Try Now.</h4>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img
+        class="hero-right-image"
+        src="/img/landing-page-girl.jpg"
+        alt="picture of a girl on video call"
+      />
+    </div>
+  </section>
+  <section id="main-section" class="video-section">
+    <h2>Let's Speak!</h2>
+    <h5>Your View</h5>
+    <div id="video-grid"></div>
+    <button id="invite-button">Invite Friends</button>
+  </section>
+</html>
