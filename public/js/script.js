@@ -1,6 +1,9 @@
 const socket = io("/");
 const videoGrid = document.getElementById("video-grid");
-const myPeer = new Peer();
+const myPeer = new Peer(undefined, {
+	host: "/",
+	port: "3001"
+});
 const myVideo = document.createElement("video");
 myVideo.muted = true;
 const peers = {};
@@ -72,4 +75,11 @@ function copyToClipboard(text) {
   dummy.select();
   document.execCommand("copy");
   document.body.removeChild(dummy);
+}
+
+// End Call
+document.getElementById("end-button").addEventListener("click", endCall);
+
+function endCall() {
+  window.location.href = "/";
 }
