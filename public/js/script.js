@@ -7,6 +7,7 @@ const videoGrid = document.getElementById("video-grid");
 const myPeer = new Peer();
 const myVideo = document.createElement("video");
 myVideo.muted = true;
+myVideo.setAttribute("playsinline", true);  // Added for iOS
 const peers = {};
 navigator.mediaDevices
   .getUserMedia({
@@ -19,6 +20,7 @@ navigator.mediaDevices
     myPeer.on("call", (call) => {
       call.answer(stream);
       const video = document.createElement("video");
+      video.setAttribute("playsinline", true);  // Added for iOS
       call.on("stream", (userVideoStream) => {
         addVideoStream(video, userVideoStream);
       });
@@ -42,6 +44,7 @@ myPeer.on("open", (id) => {
 function connectToNewUser(userId, stream) {
   const call = myPeer.call(userId, stream);
   const video = document.createElement("video");
+  video.setAttribute("playsinline", true);  // Added for iOS
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
   });
@@ -52,13 +55,28 @@ function connectToNewUser(userId, stream) {
   peers[userId] = call;
 }
 
+// function addVideoStream(video, stream) {
+//   video.srcObject = stream;
+//   video.addEventListener("loadedmetadata", () => {
+//     video.play();
+//   });
+//   videoGrid.append(video);
+// }
+
 function addVideoStream(video, stream) {
   video.srcObject = stream;
+
+  // Essential for iOS Safari/Chrome
+  video.setAttribute("playsinline", true);
+  video.muted = true; // Only needed for local stream (safe to set always)
+
   video.addEventListener("loadedmetadata", () => {
-    video.play();
+    video.play().catch(e => console.error("video.play() failed:", e));
   });
+
   videoGrid.append(video);
 }
+
 
 // URL Copy To Clipboard
 document.getElementById("invite-button").addEventListener("click", getURL);
