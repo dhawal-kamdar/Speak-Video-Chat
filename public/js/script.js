@@ -4,52 +4,74 @@ const videoGrid = document.getElementById("video-grid");
 // 	host: "/",
 // 	port: "3001"
 // });
+console.log("Connecting to PeerJS...");
 const myPeer = new Peer();
 const myVideo = document.createElement("video");
 myVideo.muted = true;
 myVideo.setAttribute("playsinline", true);  // Added for iOS
 const peers = {};
+
+console.log("Requesting camera and microphone access...");
 navigator.mediaDevices
   .getUserMedia({
     video: true,
     audio: true,
   })
   .then((stream) => {
+    console.log("Camera and mic access granted.");
     addVideoStream(myVideo, stream);
 
     myPeer.on("call", (call) => {
+      console.log("Incoming call from peer:", call.peer);
       call.answer(stream);
       const video = document.createElement("video");
       video.setAttribute("playsinline", true);  // Added for iOS
       call.on("stream", (userVideoStream) => {
+        console.log("Received remote stream from:", call.peer);
         addVideoStream(video, userVideoStream);
+      });
+
+      call.on("error", (err) => {
+        console.error("Call error:", err);
       });
     });
 
     socket.on("user-connected", (userId) => {
-      console.log("New User Connected");
+      console.log("🟢 New user connected:", userId);
       connectToNewUser(userId, stream);
     });
+  })
+  .catch((err) => {
+    console.error("Failed to get media stream:", err);
+    alert("Error accessing camera/mic: " + err.message);
   });
 
 socket.on("user-disconnected", (userId) => {
-  console.log("New User Disconnected");
+  console.log("🔴 User disconnected:", userId);
   if (peers[userId]) peers[userId].close();
 });
 
 myPeer.on("open", (id) => {
+  console.log("My peer ID is:", id);
   socket.emit("join-room", ROOM_ID, id);
 });
 
 function connectToNewUser(userId, stream) {
+  console.log("Calling new user:", userId);
   const call = myPeer.call(userId, stream);
   const video = document.createElement("video");
   video.setAttribute("playsinline", true);  // Added for iOS
   call.on("stream", (userVideoStream) => {
+    console.log("Stream received from new user:", userId);
     addVideoStream(video, userVideoStream);
   });
   call.on("close", () => {
+    console.log("Call closed with user:", userId);
     video.remove();
+  });
+
+  call.on("error", (err) => {
+    console.error("Call error with user:", userId, err);
   });
 
   peers[userId] = call;
@@ -64,6 +86,7 @@ function connectToNewUser(userId, stream) {
 // }
 
 function addVideoStream(video, stream) {
+  console.log("Adding video stream to DOM");
   video.srcObject = stream;
 
   // Essential for iOS Safari/Chrome
