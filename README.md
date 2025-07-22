@@ -4,7 +4,7 @@ Speak is a free multi-room multi-user video chatting website.
 
 ## Demo
 
-https://speak-video-chat.herokuapp.com/
+https://speak-video-chat.onrender.com/
 
 ## Developed using
 
